@@ -1,0 +1,11 @@
+機能
+1参加してないグループIDの削除と全グループID取得
+2全グループ退出
+
+
+pythonを公式サイトからインストール
+https://www.python.org/
+
+build.bat
+run.bat
+を起動
