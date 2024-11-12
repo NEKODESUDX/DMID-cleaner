@@ -1,3 +1,5 @@
+教育目的のみ
+
 機能
 1参加してないグループIDの削除と全グループID取得
 2全グループ退出
@@ -9,3 +11,17 @@ https://www.python.org/
 build.bat
 run.bat
 を起動
+
+For educational purposes only
+
+Functions
+1Delete unjoined group IDs and retrieve all group IDs
+2Exit all groups
+
+
+Install python from official site
+https://www.python.org/
+
+build.bat
+run.bat
+run.bat
