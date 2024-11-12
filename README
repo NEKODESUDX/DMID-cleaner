@@ -2,7 +2,6 @@
 
 機能
 1参加してないグループIDの削除と参加している全グループIDの自動取得
-2全グループ退出
 
 
 pythonを公式サイトからインストール
@@ -21,7 +20,6 @@ For educational purposes only
 
 Features
 1Deletion of unjoined group IDs and automatic retrieval of all group IDs that have joined
-2Exit all groups
 
 
 Install python from official site
