@@ -8,20 +8,29 @@
 pythonを公式サイトからインストール
 https://www.python.org/
 
+config.jsonを設定
+
 build.bat
 run.bat
 を起動
 
+group_id.txtにログが出力されます
+
+en
 For educational purposes only
 
-Functions
-1Delete unjoined group IDs and retrieve all group IDs
+Features
+1Deletion of unjoined group IDs and automatic retrieval of all group IDs that have joined
 2Exit all groups
 
 
 Install python from official site
 https://www.python.org/
 
+Configure config.json
+
 build.bat
 run.bat
-run.bat
+Run
+
+Logs are output to group_id.txt
