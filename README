@@ -2,6 +2,7 @@
 
 機能
 1参加してないグループIDの削除と参加している全グループIDの自動取得
+2リアクション追加
 
 
 pythonを公式サイトからインストール
@@ -19,8 +20,8 @@ en
 For educational purposes only
 
 Features
-1Deletion of unjoined group IDs and automatic retrieval of all group IDs that have joined
-
+1 Deletion of unjoined group IDs and automatic retrieval of all group IDs that have joined
+2 reaction add
 
 Install python from official site
 https://www.python.org/
