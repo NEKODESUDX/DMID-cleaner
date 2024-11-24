@@ -6,6 +6,14 @@ import requests
 import json
 import time
 
+# アルファベットを国旗絵文字にマッピングする辞書
+alphabet_to_flag = {
+    'a': '🇦', 'b': '🇧', 'c': '🇨', 'd': '🇩', 'e': '🇪', 'f': '🇫', 'g': '🇬',
+    'h': '🇭', 'i': '🇮', 'j': '🇯', 'k': '🇰', 'l': '🇱', 'm': '🇲', 'n': '🇳',
+    'o': '🇴', 'p': '🇵', 'q': '🇶', 'r': '🇷', 's': '🇸', 't': '🇹', 'u': '🇺',
+    'v': '🇻', 'w': '🇼', 'x': '🇽', 'y': '🇾', 'z': '🇿'
+}
+
 def logo():
     if os.name == "nt":
         ctypes.windll.kernel32.SetConsoleTitleW(f'[Mass Group Manager] | Ready for use <3')
@@ -36,18 +44,14 @@ def get_headers(session):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 OPR/81.0.4196.31"
     }
 
-def reactionput(token, channelid, messageid, emoji, is_custom=False, proxy=None):
+def reactionput(token, channelid, messageid, emoji, proxy=None):
     session = get_session(proxy)
     headers = get_headers(session)
     headers["Authorization"] = token
-
-    if is_custom:
-        emoji_url = f"{emoji}%3A{emoji}"
-    else:
-        emoji_url = requests.utils.quote(emoji)
-
+    
+    emoji = requests.utils.quote(emoji)
     response = session.put(
-        f"https://discord.com/api/v9/channels/{channelid}/messages/{messageid}/reactions/{emoji_url}/%40me?location=Message%20Reaction%20Picker&type=0",
+        f"https://discord.com/api/v9/channels/{channelid}/messages/{messageid}/reactions/{emoji}/%40me?location=Message&type=0",
         headers=headers
     )
     if response.status_code in [200, 204]:
@@ -55,7 +59,7 @@ def reactionput(token, channelid, messageid, emoji, is_custom=False, proxy=None)
     elif response.status_code == 429:
         print("[-] Rate limited. Please wait before retrying.")
         retry_after = response.json().get("retry_after", 1)
-        time.sleep(retry_after)
+        time.sleep(retry_after)  
     elif response.status_code == 401:
         print("[-] Invalid or expired token.")
     else:
@@ -87,7 +91,7 @@ def reaction_spammer():
         return
 
     channel_id = input("channelID?: ").strip()
-    emoji_input = input("Select your emoji (😀,⚠️,😠,🇮🇱,🇮🇸...) or (custom emoji ID1,ID2...)[Warning! The maximum number of reactions that can be added to a single message is 20.]: ").strip()
+    emoji_input = input("select your emoji (a, b, c, ... or custom emojis): ").strip()
     delay = input("Delay between reactions (in seconds)?: ").strip()
 
     try:
@@ -98,7 +102,14 @@ def reaction_spammer():
         print(f"{colorama.Fore.RED}    [!] Invalid delay. Using default delay of 1 second.{colorama.Fore.RESET}")
         delay = 1.0
 
-    emojis = [emoji.strip() for emoji in emoji_input.split(",") if emoji.strip()]
+    emojis = []
+    for emoji in emoji_input.split(","):
+        emoji = emoji.strip().lower()
+        if emoji in alphabet_to_flag:
+            emojis.append(alphabet_to_flag[emoji])  # Convert letter to flag emoji
+        else:
+            emojis.append(emoji)  # Keep custom emojis as is
+
     if not emojis:
         print(f"{colorama.Fore.RED}    [!] No valid emojis provided!{colorama.Fore.RESET}")
         return
@@ -110,8 +121,7 @@ def reaction_spammer():
 
     for message in messages:
         for emoji in emojis:
-            is_custom = emoji.isdigit()  # Check if emoji is a custom emoji by checking if it contains only digits
-            reactionput(token, channel_id, message['id'], emoji, is_custom)
+            reactionput(token, channel_id, message['id'], emoji)
             time.sleep(delay)
 
 def update_group_ids():
@@ -134,7 +144,7 @@ def update_group_ids():
         channels = response.json()
         with open("group_id.txt", "w") as group_id_file:
             for channel in channels:
-                if channel['type'] == 3:  
+                if channel['type'] == 3:  # Direct message type
                     group_id_file.write(channel['id'] + '\n')
         print(f"{colorama.Fore.LIGHTGREEN_EX}    [+] Group IDs updated successfully.{colorama.Fore.RESET}")
     else:
@@ -160,4 +170,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
