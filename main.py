@@ -1,4 +1,3 @@
-
 import os
 import sys
 import colorama
@@ -37,14 +36,18 @@ def get_headers(session):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 OPR/81.0.4196.31"
     }
 
-def reactionput(token, channelid, messageid, emoji, proxy=None):
+def reactionput(token, channelid, messageid, emoji, is_custom=False, proxy=None):
     session = get_session(proxy)
     headers = get_headers(session)
     headers["Authorization"] = token
-    
-    emoji = requests.utils.quote(emoji)
+
+    if is_custom:
+        emoji_url = f"{emoji}%3A{emoji}"
+    else:
+        emoji_url = requests.utils.quote(emoji)
+
     response = session.put(
-        f"https://discord.com/api/v9/channels/{channelid}/messages/{messageid}/reactions/{emoji}/%40me?location=Message&type=0",
+        f"https://discord.com/api/v9/channels/{channelid}/messages/{messageid}/reactions/{emoji_url}/%40me?location=Message%20Reaction%20Picker&type=0",
         headers=headers
     )
     if response.status_code in [200, 204]:
@@ -52,7 +55,7 @@ def reactionput(token, channelid, messageid, emoji, proxy=None):
     elif response.status_code == 429:
         print("[-] Rate limited. Please wait before retrying.")
         retry_after = response.json().get("retry_after", 1)
-        time.sleep(retry_after)  
+        time.sleep(retry_after)
     elif response.status_code == 401:
         print("[-] Invalid or expired token.")
     else:
@@ -84,7 +87,7 @@ def reaction_spammer():
         return
 
     channel_id = input("channelID?: ").strip()
-    emoji_input = input("select your emoji (😀,⚠️,😠,🇮🇱,🇮🇸...)or(custom emoji ID1,ID2...)[Warning! The maximum number of reactions that can be added to a single message is 20.]: ").strip()
+    emoji_input = input("Select your emoji (😀,⚠️,😠,🇮🇱,🇮🇸...) or (custom emoji ID1,ID2...)[Warning! The maximum number of reactions that can be added to a single message is 20.]: ").strip()
     delay = input("Delay between reactions (in seconds)?: ").strip()
 
     try:
@@ -107,7 +110,8 @@ def reaction_spammer():
 
     for message in messages:
         for emoji in emojis:
-            reactionput(token, channel_id, message['id'], emoji)
+            is_custom = emoji.isdigit()  # Check if emoji is a custom emoji by checking if it contains only digits
+            reactionput(token, channel_id, message['id'], emoji, is_custom)
             time.sleep(delay)
 
 def update_group_ids():
@@ -156,5 +160,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
