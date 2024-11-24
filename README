@@ -9,6 +9,8 @@ pythonを公式サイトからインストール
 https://www.python.org/
 
 config.jsonを設定
+channel.txtにchanneldを改行で区切って入力
+おすすめ拡張機能https://greasyfork.org/ja/scripts/518683-discord-channel-id-extractor/code
 
 build.bat
 run.bat
@@ -20,19 +22,22 @@ en
 For educational purposes only
 
 Features
-1 Deletion of unjoined group IDs and automatic retrieval of all group IDs that have joined
-2 reaction add
+1Deletion of non-participating group IDs and automatic retrieval of all participating group IDs
+2Add reaction
+
 
 Install python from official site
 https://www.python.org/
 
 Configure config.json
+Enter channeld in channel.txt separated by new line
+Recommended extensions https://greasyfork.org/ja/scripts/518683-discord-channel-id-extractor/code
 
 build.bat
 run.bat
 Run
 
-Logs are output to group_id.txt
+Logs will be output to group_id.txt
 
 ❤ If you like this tool, please donate to the developers
 
