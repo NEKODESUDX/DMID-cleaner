@@ -84,7 +84,7 @@ def reaction_spammer():
         return
 
     channel_id = input("channelID?: ").strip()
-    emoji_input = input("select your emoji (😀,⚠️,😠...)or(custom emoji ID1,ID2...)[Warning! The maximum number of reactions that can be added to a single message is 20.]: ").strip()
+    emoji_input = input("select your emoji (😀,⚠️,😠,🇮🇱,🇮🇸...)or(custom emoji ID1,ID2...)[Warning! The maximum number of reactions that can be added to a single message is 20.]: ").strip()
     delay = input("Delay between reactions (in seconds)?: ").strip()
 
     try:
