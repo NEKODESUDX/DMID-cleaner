@@ -90,7 +90,14 @@ def reaction_spammer():
         print(f"{colorama.Fore.RED}    [!] Error: Config file or token not found!{colorama.Fore.RESET}")
         return
 
-    channel_id = input("channelID?: ").strip()
+   
+    try:
+        with open("channel.txt", "r") as channel_file:
+            channel_ids = [line.strip() for line in channel_file.readlines() if line.strip()]
+    except FileNotFoundError:
+        print(f"{colorama.Fore.RED}    [!] Error: channel.txt file not found!{colorama.Fore.RESET}")
+        return
+
     emoji_input = input("select your emoji (a, b, c, ... or custom emojis): ").strip()
     delay = input("Delay between reactions (in seconds)?: ").strip()
 
@@ -106,23 +113,26 @@ def reaction_spammer():
     for emoji in emoji_input.split(","):
         emoji = emoji.strip().lower()
         if emoji in alphabet_to_flag:
-            emojis.append(alphabet_to_flag[emoji])  # Convert letter to flag emoji
+            emojis.append(alphabet_to_flag[emoji]) 
         else:
-            emojis.append(emoji)  # Keep custom emojis as is
+            emojis.append(emoji)  
 
     if not emojis:
         print(f"{colorama.Fore.RED}    [!] No valid emojis provided!{colorama.Fore.RESET}")
         return
 
-    messages = fetch_messages(token, channel_id, limit=100)
-    if not messages:
-        print(f"{colorama.Fore.RED}    [!] No messages found in the channel or an error occurred.{colorama.Fore.RESET}")
-        return
+    
+    for channel_id in channel_ids:
+        print(f"{colorama.Fore.LIGHTCYAN_EX}Processing channel {channel_id}...{colorama.Fore.RESET}")
+        messages = fetch_messages(token, channel_id, limit=100)
+        if not messages:
+            print(f"{colorama.Fore.RED}    [!] No messages found in the channel or an error occurred.{colorama.Fore.RESET}")
+            continue
 
-    for message in messages:
-        for emoji in emojis:
-            reactionput(token, channel_id, message['id'], emoji)
-            time.sleep(delay)
+        for message in messages:
+            for emoji in emojis:
+                reactionput(token, channel_id, message['id'], emoji)
+                time.sleep(delay)
 
 def update_group_ids():
     try:
@@ -144,7 +154,7 @@ def update_group_ids():
         channels = response.json()
         with open("group_id.txt", "w") as group_id_file:
             for channel in channels:
-                if channel['type'] == 3:  # Direct message type
+                if channel['type'] == 3: 
                     group_id_file.write(channel['id'] + '\n')
         print(f"{colorama.Fore.LIGHTGREEN_EX}    [+] Group IDs updated successfully.{colorama.Fore.RESET}")
     else:
@@ -170,5 +180,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
